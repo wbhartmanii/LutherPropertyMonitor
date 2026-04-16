@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <rect width="640" height="420" fill="#18221f"/>
+  <rect x="90" y="0" width="50" height="420" fill="#2c3f2f"/>
+  <rect x="195" y="0" width="58" height="420" fill="#314a33"/>
+  <rect x="410" y="0" width="50" height="420" fill="#293d2d"/>
+  <path d="M0 310 C180 260 280 340 420 300 C520 276 575 288 640 270 L640 420 L0 420 Z" fill="#4b5f40"/>
+  <ellipse cx="350" cy="258" rx="42" ry="22" fill="#aa8f69"/>
+  <text x="24" y="34" fill="#d6e7d4" font-size="22" font-family="Arial, sans-serif">Pine Trail Cam</text>
+</svg>
