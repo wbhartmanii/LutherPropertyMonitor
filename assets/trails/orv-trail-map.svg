@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420">
+  <rect width="980" height="420" fill="#152029"/>
+  <rect x="20" y="20" width="940" height="380" rx="12" fill="#1f2d38" stroke="#3b5466"/>
+  <path d="M120 320 C220 220 330 230 430 140 C560 20 700 150 860 90" fill="none" stroke="#9bd676" stroke-width="10" stroke-linecap="round"/>
+  <path d="M200 330 C290 290 330 330 410 285" fill="none" stroke="#89c8ff" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="120" cy="320" r="9" fill="#f9d071"/>
+  <circle cx="860" cy="90" r="9" fill="#f9d071"/>
+  <rect x="64" y="52" width="250" height="96" rx="8" fill="#152029" stroke="#4f6a7d"/>
+  <text x="80" y="84" fill="#dce8f1" font-size="24" font-family="Arial, sans-serif">ORV Trail Loop (Mock)</text>
+  <text x="80" y="115" fill="#9fc0d7" font-size="17" font-family="Arial, sans-serif">Main route: ~1.0 mile</text>
+</svg>

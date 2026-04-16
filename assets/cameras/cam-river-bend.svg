@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#2f3f4f"/>
+      <stop offset="1" stop-color="#18222d"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="url(#g1)"/>
+  <path d="M0 290 C120 260 220 330 340 300 C460 270 520 320 640 290 L640 420 L0 420 Z" fill="#3a6f88" opacity="0.9"/>
+  <rect x="46" y="140" width="95" height="65" rx="6" fill="#2a343d"/>
+  <circle cx="530" cy="85" r="26" fill="#d3dfeb" opacity="0.8"/>
+  <text x="28" y="36" fill="#dbe7f3" font-size="22" font-family="Arial, sans-serif">River Bend Cam</text>
+</svg>
