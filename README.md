@@ -21,6 +21,10 @@ This dashboard translates raw environmental signals into practical property-focu
   - River status
   - Weather
   - Camera photos
+  - Fishing tips (mock Orvis-style guidance)
+  - ORV trail map
+  - Recently spotted wildlife log
+  - Upcoming community events
   - Trend summary
   - Notes/future modules
 - Configurable flood/river interpretation thresholds
@@ -49,10 +53,12 @@ This dashboard translates raw environmental signals into practical property-focu
 │   ├── mockData.js           # Mock river/weather/camera/notes data
 │   └── thresholds.js         # Configurable river status thresholds + source metadata
 └── assets/
-    └── cameras/
-        ├── cam-river-bend.svg
-        ├── cam-pine-trail.svg
-        └── cam-north-field.svg
+    ├── cameras/
+    │   ├── cam-river-bend.svg
+    │   ├── cam-pine-trail.svg
+    │   └── cam-north-field.svg
+    └── trails/
+        └── orv-trail-map.svg
 ```
 
 ## Data model (future-ready)
@@ -72,6 +78,18 @@ Current mock model is shaped to support expansion into real integrations:
   - id, name, location
   - timestamp
   - image URL
+- `dashboardData.fishing.tips[]`
+  - species, bite behavior window
+  - bait/fly recommendations
+  - confidence score
+- `dashboardData.wildlifeLog[]`
+  - species and count
+  - camera source
+  - timestamp and behavior notes
+- `dashboardData.communityEvents[]`
+  - event title
+  - date/time
+  - location + notes
 - `dashboardData.ai`
   - placeholder fields for model summary, risk score, anomalies
 - `dashboardData.notes[]`
@@ -110,6 +128,10 @@ No build or action is required for this MVP.
 - **River source:** replace `dashboardData.river` in `data/mockData.js` with fetched gauge data (or inject via a pre-generated JSON file). 
 - **Weather source:** replace `dashboardData.weather` with weather API output.
 - **Camera source:** replace `dashboardData.cameras` with actual media metadata feed.
+- **Fishing tips source:** replace `dashboardData.fishing` with curated fishing feed data (for example, Orvis-supported regional inputs if available/licensed).
+- **Trail map source:** replace mock SVG in `assets/trails/` with georeferenced map export or generated tile.
+- **Wildlife log source:** convert `dashboardData.wildlifeLog` to append historical camera detections from media metadata.
+- **Community events source:** replace `dashboardData.communityEvents` with town/county/community calendar API or import feed.
 - **Interpretation thresholds:** edit `data/thresholds.js` for property-specific stage categories.
 - **AI summary:** replace `buildRulesSummary()` in `js/app.js` with LLM-generated summary text.
 
