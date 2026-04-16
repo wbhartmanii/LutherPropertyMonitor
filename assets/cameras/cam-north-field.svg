@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+    <stop offset="0" stop-color="#34485f"/>
+    <stop offset="1" stop-color="#243545"/>
+  </linearGradient>
+  <rect width="640" height="420" fill="url(#sky)"/>
+  <rect y="220" width="640" height="200" fill="#2f4a3b"/>
+  <path d="M0 290 L120 260 L240 285 L360 250 L500 280 L640 248 L640 420 L0 420 Z" fill="#3f614d"/>
+  <rect x="470" y="168" width="16" height="70" fill="#7d694e"/>
+  <polygon points="478,118 444,180 512,180" fill="#5f7c63"/>
+  <text x="22" y="34" fill="#dce8f0" font-size="22" font-family="Arial, sans-serif">North Field Cam</text>
+</svg>
