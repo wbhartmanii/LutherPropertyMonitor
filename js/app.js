@@ -14,7 +14,12 @@ const ui = {
   weatherPrecip: document.querySelector('[data-weather-precip]'),
   weatherWind: document.querySelector('[data-weather-wind]'),
   weatherSummary: document.querySelector('[data-weather-summary]'),
+  fishingSource: document.querySelector('[data-fishing-source]'),
+  fishingTips: document.querySelector('[data-fishing-tips]'),
+  trailNotes: document.querySelector('[data-trail-notes]'),
   cameraGrid: document.querySelector('[data-camera-grid]'),
+  wildlifeLog: document.querySelector('[data-wildlife-log]'),
+  eventsList: document.querySelector('[data-events-list]'),
   trendSummary: document.querySelector('[data-trend-summary]'),
   notesList: document.querySelector('[data-notes-list]'),
   viewButtons: document.querySelectorAll('[data-view-toggle]'),
@@ -118,6 +123,49 @@ function renderNotes(notes) {
   ui.notesList.innerHTML = notes.map((note) => `<li>${note}</li>`).join('');
 }
 
+function renderFishingTips(fishingData) {
+  ui.fishingTips.innerHTML = fishingData.tips
+    .map(
+      (tip) => `
+      <article class="tip-card">
+        <h4>${tip.species}</h4>
+        <p><strong>Where/when:</strong> ${tip.bite}</p>
+        <p><strong>Try:</strong> ${tip.baitOrFly}</p>
+        <p class="tip-confidence">${tip.confidence} confidence</p>
+      </article>
+    `
+    )
+    .join('');
+}
+
+function renderWildlifeLog(entries) {
+  ui.wildlifeLog.innerHTML = entries
+    .map(
+      (entry) => `
+      <article class="wildlife-item">
+        <h4>${entry.species} <span>×${entry.count}</span></h4>
+        <p>${entry.behavior}</p>
+        <p class="subtle">Seen at ${entry.camera} · ${formatTimestamp(entry.timestamp)}</p>
+      </article>
+    `
+    )
+    .join('');
+}
+
+function renderCommunityEvents(events) {
+  ui.eventsList.innerHTML = events
+    .map(
+      (event) => `
+      <article class="event-item">
+        <h4>${event.name}</h4>
+        <p>${formatTimestamp(event.date)} · ${event.location}</p>
+        <p class="subtle">${event.notes}</p>
+      </article>
+    `
+    )
+    .join('');
+}
+
 function setViewMode(viewMode) {
   ui.viewButtons.forEach((button) => {
     const isSelected = button.dataset.viewToggle === viewMode;
@@ -153,8 +201,13 @@ function init() {
   ui.weatherPrecip.textContent = `${dashboardData.weather.precipitationChance}%`;
   ui.weatherWind.textContent = `${dashboardData.weather.windMph} mph`;
   ui.weatherSummary.textContent = dashboardData.weather.summary;
+  ui.fishingSource.textContent = `Source: ${dashboardData.fishing.source}`;
+  ui.trailNotes.textContent = dashboardData.trails.notes;
 
   renderCameraGallery(dashboardData.cameras);
+  renderFishingTips(dashboardData.fishing);
+  renderWildlifeLog(dashboardData.wildlifeLog);
+  renderCommunityEvents(dashboardData.communityEvents);
   ui.trendSummary.textContent = summary;
   renderNotes(dashboardData.notes);
 
