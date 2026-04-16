@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luther Property Intelligence Dashboard</title>
+    <meta
+      name="description"
+      content="Private property intelligence dashboard for river conditions, weather, and camera activity near Luther, Michigan."
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Private Dashboard</p>
+          <h1>Luther River Property Intelligence</h1>
+        </div>
+        <div class="topbar-meta">
+          <span class="last-updated">Last updated: <strong data-last-updated>—</strong></span>
+          <span class="alert-badge hidden" data-alert-badge></span>
+        </div>
+      </header>
+
+      <section class="control-row">
+        <p>View mode:</p>
+        <div class="toggle-group" role="group" aria-label="dashboard display mode">
+          <button class="toggle-btn" data-view-toggle="interpreted" aria-pressed="true">Interpreted view</button>
+          <button class="toggle-btn" data-view-toggle="raw" aria-pressed="false">Raw view</button>
+        </div>
+      </section>
+
+      <main class="dashboard-grid">
+        <section class="card river-card">
+          <div class="card-header">
+            <h2>River status</h2>
+            <span class="status-pill" data-river-status>—</span>
+          </div>
+          <p class="subtle">
+            Data targets:
+            <a href="https://monitormywatershed.org/sites/Scott/" target="_blank" rel="noreferrer">Scott monitor</a>
+            ·
+            <a href="https://monitormywatershed.org/sites/Bear%20Track/" target="_blank" rel="noreferrer">Bear Track monitor</a>
+          </p>
+
+          <div class="metric-row" data-visible-in="interpreted">
+            <div>
+              <p class="metric-label">Current level</p>
+              <p class="metric-value" data-river-level>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Recent trend</p>
+              <p class="metric-value" data-river-trend>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Current flow</p>
+              <p class="metric-value" data-river-flow>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Baseline</p>
+              <p class="metric-value small" data-river-baseline>—</p>
+            </div>
+          </div>
+
+          <div class="metric-row hidden" data-visible-in="raw">
+            <div>
+              <p class="metric-label">Source</p>
+              <p class="metric-value small" data-river-source>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Current stage</p>
+              <p class="metric-value" data-river-level>—</p>
+            </div>
+          </div>
+
+          <svg class="sparkline" data-river-sparkline role="img" aria-label="River level trend line"></svg>
+
+          <p class="disclaimer" data-river-disclaimer>—</p>
+          <p class="subtle" data-live-river-status>Live pull status: mock mode</p>
+        </section>
+
+        <section class="card weather-card">
+          <div class="card-header">
+            <h2>Weather</h2>
+            <span class="soft-tag">Mock feed</span>
+          </div>
+          <div class="weather-grid">
+            <div>
+              <p class="metric-label">Temperature</p>
+              <p class="metric-value" data-weather-temp>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Precip chance</p>
+              <p class="metric-value" data-weather-precip>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Wind</p>
+              <p class="metric-value" data-weather-wind>—</p>
+            </div>
+          </div>
+          <p class="subtle" data-weather-summary>—</p>
+        </section>
+
+        <section class="card camera-card-wrap">
+          <div class="card-header">
+            <h2>Camera photos</h2>
+            <span class="soft-tag">Filter-ready layout</span>
+          </div>
+          <div class="camera-grid" data-camera-grid></div>
+        </section>
+
+        <section class="card trend-card">
+          <div class="card-header">
+            <h2>Trend summary</h2>
+            <span class="soft-tag">Rules now · AI later</span>
+          </div>
+          <p class="summary-text" data-trend-summary></p>
+          <p class="subtle">
+            Placeholder logic in JS can be swapped with LLM or serverless analysis endpoint later.
+          </p>
+        </section>
+
+        <section class="card fishing-card">
+          <div class="card-header">
+            <h2>Fishing tips</h2>
+            <span class="soft-tag">Orvis-style cues (mock)</span>
+          </div>
+          <p class="subtle" data-fishing-source></p>
+          <p class="subtle">
+            Target report:
+            <a
+              href="https://fishingreports.orvis.com/midwest/michigan/little-manistee-river"
+              target="_blank"
+              rel="noreferrer"
+              >Orvis Little Manistee River report</a
+            >
+          </p>
+          <p class="subtle">
+            Placeholder module for future Orvis/API-fed hatch and lure recommendations.
+          </p>
+          <div class="tips-list" data-fishing-tips></div>
+          <p class="subtle" data-live-fishing-status>Live pull status: mock mode</p>
+        </section>
+
+        <section class="card trail-card">
+          <div class="card-header">
+            <h2>ORV trail map</h2>
+            <span class="soft-tag">~1 mile on property</span>
+          </div>
+          <img class="trail-map-image" src="./assets/trails/orv-trail-map.svg" alt="Property ORV trail map mockup" />
+          <p class="subtle" data-trail-notes></p>
+        </section>
+
+        <section class="card wildlife-card">
+          <div class="card-header">
+            <h2>Recently spotted wildlife</h2>
+            <span class="soft-tag">Historical log ready</span>
+          </div>
+          <div class="wildlife-list" data-wildlife-log></div>
+        </section>
+
+        <section class="card events-card">
+          <div class="card-header">
+            <h2>Upcoming community events</h2>
+            <span class="soft-tag">Local calendar (mock)</span>
+          </div>
+          <div class="events-list" data-events-list></div>
+        </section>
+
+        <section class="card notes-card">
+          <div class="card-header">
+            <h2>Notes & future modules</h2>
+          </div>
+          <ul data-notes-list></ul>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
