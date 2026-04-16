@@ -24,6 +24,14 @@ body {
   color: var(--text);
 }
 
+a {
+  color: #8dc5ff;
+}
+
+a:hover {
+  color: #b4d9ff;
+}
+
 .app-shell {
   max-width: 1220px;
   margin: 0 auto;
@@ -203,6 +211,13 @@ h2 {
 .sparkline-axis {
   stroke: #425261;
   stroke-width: 2;
+}
+
+.sparkline-baseline {
+  stroke: #79b6ff;
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+  opacity: 0.9;
 }
 
 .disclaimer,

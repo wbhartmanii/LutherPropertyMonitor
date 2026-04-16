@@ -1,5 +1,6 @@
 import { dashboardData } from '../data/mockData.js';
 import { riverThresholds, riverDataSourceMeta } from '../data/thresholds.js';
+import { tryFetchFishingReportSnippet, tryFetchRiverStatsFromSources } from './liveData.js';
 
 const ui = {
   lastUpdated: document.querySelector('[data-last-updated]'),
@@ -7,8 +8,12 @@ const ui = {
   riverStatusLabel: document.querySelector('[data-river-status]'),
   riverCurrentLevel: document.querySelector('[data-river-level]'),
   riverTrend: document.querySelector('[data-river-trend]'),
+  riverFlow: document.querySelector('[data-river-flow]'),
+  riverBaseline: document.querySelector('[data-river-baseline]'),
   riverSource: document.querySelector('[data-river-source]'),
   riverDisclaimer: document.querySelector('[data-river-disclaimer]'),
+  liveRiverStatus: document.querySelector('[data-live-river-status]'),
+  liveRiverSource: document.querySelector('[data-live-river-source]'),
   riverSparkline: document.querySelector('[data-river-sparkline]'),
   weatherTemp: document.querySelector('[data-weather-temp]'),
   weatherPrecip: document.querySelector('[data-weather-precip]'),
@@ -16,6 +21,7 @@ const ui = {
   weatherSummary: document.querySelector('[data-weather-summary]'),
   fishingSource: document.querySelector('[data-fishing-source]'),
   fishingTips: document.querySelector('[data-fishing-tips]'),
+  liveFishingStatus: document.querySelector('[data-live-fishing-status]'),
   trailNotes: document.querySelector('[data-trail-notes]'),
   cameraGrid: document.querySelector('[data-camera-grid]'),
   wildlifeLog: document.querySelector('[data-wildlife-log]'),
@@ -77,7 +83,7 @@ function formatTimestamp(iso) {
   });
 }
 
-function renderSparkline(values, status) {
+function renderSparkline(values, status, baselineLevel = null) {
   if (!values.length) return;
 
   const w = 300;
@@ -96,7 +102,13 @@ function renderSparkline(values, status) {
     .join(' ');
 
   ui.riverSparkline.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  const baselineLine =
+    typeof baselineLevel === 'number' && Number.isFinite(baselineLevel)
+      ? `<line x1=\"0\" y1=\"${(h - padding - ((baselineLevel - min) / range) * (h - padding * 2)).toFixed(1)}\" x2=\"${w}\" y2=\"${(h - padding - ((baselineLevel - min) / range) * (h - padding * 2)).toFixed(1)}\" class=\"sparkline-baseline\" />`
+      : '';
+
   ui.riverSparkline.innerHTML = `
+    ${baselineLine}
     <polyline fill="none" stroke="${status.color}" stroke-width="4" points="${points}" />
     <line x1="0" y1="${h - padding}" x2="${w}" y2="${h - padding}" class="sparkline-axis" />
   `;
@@ -177,15 +189,22 @@ function setViewMode(viewMode) {
 }
 
 function init() {
-  const status = getRiverStatus(dashboardData.river.currentLevel);
+  let activeRiverLevel = dashboardData.river.currentLevel;
   const trend = getTrend(dashboardData.river.recentLevels);
+  let status = getRiverStatus(activeRiverLevel);
   const summary = buildRulesSummary(dashboardData, status, trend);
 
   ui.lastUpdated.textContent = formatTimestamp(dashboardData.lastUpdated);
 
   ui.riverStatusLabel.textContent = status.label;
   ui.riverStatusLabel.style.setProperty('--status-color', status.color);
-  ui.riverCurrentLevel.textContent = `${dashboardData.river.currentLevel.toFixed(1)} ${dashboardData.river.units}`;
+  ui.riverCurrentLevel.textContent = `${activeRiverLevel.toFixed(1)} ${dashboardData.river.units}`;
+  ui.riverFlow.textContent = dashboardData.river.currentFlowCfs
+    ? `${dashboardData.river.currentFlowCfs} cfs`
+    : '—';
+  ui.riverBaseline.textContent = dashboardData.river.julSepBaselineFt
+    ? `${dashboardData.river.julSepBaselineFt.toFixed(1)} ft (Jul–Sep avg)`
+    : '—';
   ui.riverTrend.textContent = `${trend.direction} (${trend.delta > 0 ? '+' : ''}${trend.delta.toFixed(1)} ft / ${dashboardData.river.historyHours}h)`;
   ui.riverSource.textContent = riverDataSourceMeta.sourceName;
   ui.riverDisclaimer.textContent = riverDataSourceMeta.disclaimer;
@@ -195,7 +214,7 @@ function init() {
     ui.alertBadge.textContent = status.severity >= 3 ? 'Flood-stage attention' : 'Caution stage';
   }
 
-  renderSparkline(dashboardData.river.recentLevels, status);
+  renderSparkline(dashboardData.river.recentLevels, status, dashboardData.river.julSepBaselineFt ?? null);
 
   ui.weatherTemp.textContent = `${dashboardData.weather.temperatureF}°F`;
   ui.weatherPrecip.textContent = `${dashboardData.weather.precipitationChance}%`;
@@ -216,6 +235,40 @@ function init() {
   });
 
   setViewMode('interpreted');
+
+  tryFetchRiverStatsFromSources().then((liveResult) => {
+    ui.liveRiverStatus.textContent = `Live pull status: ${liveResult.detail}`;
+    if (liveResult.ok && liveResult.stats) {
+      activeRiverLevel = liveResult.stats.currentLevel;
+      status = getRiverStatus(activeRiverLevel);
+      ui.riverStatusLabel.textContent = status.label;
+      ui.riverStatusLabel.style.setProperty('--status-color', status.color);
+      ui.riverCurrentLevel.textContent = `${activeRiverLevel.toFixed(1)} ${dashboardData.river.units}`;
+      ui.riverFlow.textContent =
+        typeof liveResult.stats.currentFlow === 'number'
+          ? `${liveResult.stats.currentFlow.toFixed(0)} cfs`
+          : 'n/a';
+      ui.riverBaseline.textContent =
+        typeof liveResult.stats.baselineLevel === 'number'
+          ? `${liveResult.stats.baselineLevel.toFixed(2)} ft (Jul–Sep avg, ${liveResult.stats.baselineSampleCount} samples)`
+          : 'insufficient Jul–Sep history';
+      const liveTrend = getTrend(liveResult.stats.recentLevels);
+      ui.riverTrend.textContent = `${liveTrend.direction} (${liveTrend.delta > 0 ? '+' : ''}${liveTrend.delta.toFixed(1)} ft / 24h)`;
+      renderSparkline(
+        liveResult.stats.recentLevels,
+        status,
+        typeof liveResult.stats.baselineLevel === 'number' ? liveResult.stats.baselineLevel : null
+      );
+      if (liveResult.sourceUrl) {
+        ui.liveRiverSource.classList.remove('hidden');
+        ui.liveRiverSource.innerHTML = `Active river source: <a href=\"${liveResult.sourceUrl}\" target=\"_blank\" rel=\"noreferrer\">${liveResult.source}</a>`;
+      }
+    }
+  });
+
+  tryFetchFishingReportSnippet().then((result) => {
+    ui.liveFishingStatus.textContent = `Live pull status: ${result.detail}`;
+  });
 }
 
 init();

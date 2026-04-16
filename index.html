@@ -37,6 +37,12 @@
             <h2>River status</h2>
             <span class="status-pill" data-river-status>—</span>
           </div>
+          <p class="subtle">
+            Data targets:
+            <a href="https://monitormywatershed.org/sites/Scott/" target="_blank" rel="noreferrer">Scott monitor</a>
+            ·
+            <a href="https://monitormywatershed.org/sites/Bear%20Track/" target="_blank" rel="noreferrer">Bear Track monitor</a>
+          </p>
 
           <div class="metric-row" data-visible-in="interpreted">
             <div>
@@ -46,6 +52,14 @@
             <div>
               <p class="metric-label">Recent trend</p>
               <p class="metric-value" data-river-trend>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Current flow</p>
+              <p class="metric-value" data-river-flow>—</p>
+            </div>
+            <div>
+              <p class="metric-label">Baseline</p>
+              <p class="metric-value small" data-river-baseline>—</p>
             </div>
           </div>
 
@@ -63,6 +77,8 @@
           <svg class="sparkline" data-river-sparkline role="img" aria-label="River level trend line"></svg>
 
           <p class="disclaimer" data-river-disclaimer>—</p>
+          <p class="subtle" data-live-river-status>Live pull status: mock mode</p>
+          <p class="subtle hidden" data-live-river-source></p>
         </section>
 
         <section class="card weather-card">
@@ -113,9 +129,19 @@
           </div>
           <p class="subtle" data-fishing-source></p>
           <p class="subtle">
+            Target report:
+            <a
+              href="https://fishingreports.orvis.com/midwest/michigan/little-manistee-river"
+              target="_blank"
+              rel="noreferrer"
+              >Orvis Little Manistee River report</a
+            >
+          </p>
+          <p class="subtle">
             Placeholder module for future Orvis/API-fed hatch and lure recommendations.
           </p>
           <div class="tips-list" data-fishing-tips></div>
+          <p class="subtle" data-live-fishing-status>Live pull status: mock mode</p>
         </section>
 
         <section class="card trail-card">

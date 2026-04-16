@@ -4,6 +4,8 @@ export const dashboardData = {
     stationName: 'Luther River Corridor (proxy gauge)',
     units: 'ft',
     currentLevel: 8.4,
+    currentFlowCfs: 286,
+    julSepBaselineFt: 6.3,
     historyHours: 12,
     recentLevels: [6.4, 6.5, 6.7, 7.0, 7.1, 7.3, 7.5, 7.8, 8.0, 8.2, 8.3, 8.4]
   },

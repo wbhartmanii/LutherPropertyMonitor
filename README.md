@@ -32,6 +32,9 @@ This dashboard translates raw environmental signals into practical property-focu
 - “Interpreted view” vs “Raw view” toggle
 - Alert badge when river state reaches caution/flood levels
 - Last updated timestamp
+- Best-effort live pulls for river/fishing sources with automatic fallback to mock data
+- River graph supports baseline overlay and computes Jul–Sep average baseline when historical data is available
+- River live data helper now caches last successful pull in `localStorage` so the dashboard can keep using recent live values between blocked requests
 
 ## Tech stack
 
@@ -48,10 +51,12 @@ This dashboard translates raw environmental signals into practical property-focu
 ├── css/
 │   └── main.css              # Visual styling (dark, utility-focused)
 ├── js/
-│   └── app.js                # UI rendering + interpretation + rules summary logic
+│   ├── app.js                # UI rendering + interpretation + rules summary logic
+│   └── liveData.js           # Best-effort live source pull helpers (with graceful fallback)
 ├── data/
 │   ├── mockData.js           # Mock river/weather/camera/notes data
-│   └── thresholds.js         # Configurable river status thresholds + source metadata
+│   ├── thresholds.js         # Configurable river status thresholds + source metadata
+│   └── liveSources.js        # External source URLs (Scott, Bear Track, Orvis)
 └── assets/
     ├── cameras/
     │   ├── cam-river-bend.svg
@@ -67,6 +72,8 @@ Current mock model is shaped to support expansion into real integrations:
 
 - `dashboardData.river`
   - current level
+  - current flow
+  - Jul–Sep baseline level (mock fallback)
   - historical series
   - source/station metadata
 - `dashboardData.weather`
@@ -126,6 +133,12 @@ No build or action is required for this MVP.
 ## Where to plug in real APIs later
 
 - **River source:** replace `dashboardData.river` in `data/mockData.js` with fetched gauge data (or inject via a pre-generated JSON file). 
+- **Current live-source wiring:** source URLs are in `data/liveSources.js`, and browser fetch attempts + graceful fallback are in `js/liveData.js`.
+- **MonitorMW API candidates configured:** `/api/v1/sites/?search=<site>` and `/sites/<site>/?format=json` are attempted first, then page-parsing fallback.
+- **Efficiency strategy:** candidate API URLs are queried first with `limit` params to request bounded result sets before falling back to full page parsing.
+- **Known limitation:** direct browser pulls can fail due CORS or anti-bot protections from third-party sites; the UI reports this and stays in mock mode when blocked.
+- **Resilience strategy:** if live pulls fail, the app reuses cached live stats from the browser (`localStorage`) before dropping to static mock data.
+- **Historical baseline logic:** when historical points are available, `deriveRiverStats()` in `js/liveData.js` computes July–September averages for level/flow to compare against current conditions.
 - **Weather source:** replace `dashboardData.weather` with weather API output.
 - **Camera source:** replace `dashboardData.cameras` with actual media metadata feed.
 - **Fishing tips source:** replace `dashboardData.fishing` with curated fishing feed data (for example, Orvis-supported regional inputs if available/licensed).
