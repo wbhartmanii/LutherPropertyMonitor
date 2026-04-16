@@ -1,2 +1,122 @@
-# LutherPropertyMonitor
-A vibe coded tool to monitor my property up north
+# Luther Property Intelligence Dashboard (MVP)
+
+A lightweight, static web dashboard for monitoring river-adjacent property conditions near **Luther, Michigan**.
+
+This MVP is intentionally simple and GitHub Pages-ready. It uses mock data today, but is structured for easy future upgrades to live APIs, serverless data pipelines, and AI-generated analysis.
+
+## Project purpose
+
+This dashboard translates raw environmental signals into practical property-focused insights:
+
+- River conditions interpreted into owner-friendly categories
+- Weather snapshot relevant to short-term access and risk
+- Trail/game camera gallery with metadata
+- Trend summary section designed for future AI analysis
+
+> **Important:** River status shown in this MVP is an interpreted estimate for planning, not an official flood warning.
+
+## MVP features
+
+- Dashboard cards for:
+  - River status
+  - Weather
+  - Camera photos
+  - Trend summary
+  - Notes/future modules
+- Configurable flood/river interpretation thresholds
+- Rules-based trend summary (placeholder for future LLM output)
+- “Interpreted view” vs “Raw view” toggle
+- Alert badge when river state reaches caution/flood levels
+- Last updated timestamp
+
+## Tech stack
+
+- Plain HTML, CSS, and JavaScript (ES modules)
+- No build step
+- No backend
+- Minimal dependencies (none)
+
+## File structure
+
+```text
+.
+├── index.html                # Main dashboard page
+├── css/
+│   └── main.css              # Visual styling (dark, utility-focused)
+├── js/
+│   └── app.js                # UI rendering + interpretation + rules summary logic
+├── data/
+│   ├── mockData.js           # Mock river/weather/camera/notes data
+│   └── thresholds.js         # Configurable river status thresholds + source metadata
+└── assets/
+    └── cameras/
+        ├── cam-river-bend.svg
+        ├── cam-pine-trail.svg
+        └── cam-north-field.svg
+```
+
+## Data model (future-ready)
+
+Current mock model is shaped to support expansion into real integrations:
+
+- `dashboardData.river`
+  - current level
+  - historical series
+  - source/station metadata
+- `dashboardData.weather`
+  - temperature
+  - precipitation chance
+  - wind
+  - summary
+- `dashboardData.cameras[]`
+  - id, name, location
+  - timestamp
+  - image URL
+- `dashboardData.ai`
+  - placeholder fields for model summary, risk score, anomalies
+- `dashboardData.notes[]`
+  - future module backlog
+
+## Run locally
+
+Because this project uses ES modules, run from a simple static server (not `file://`).
+
+### Option 1 (Python)
+
+```bash
+python3 -m http.server 8080
+```
+
+Then open: `http://localhost:8080`
+
+### Option 2 (VS Code Live Server)
+
+Open the folder and use **“Open with Live Server”**.
+
+## Deploy to GitHub Pages
+
+1. Push this repository to GitHub.
+2. Go to **Settings → Pages**.
+3. Under **Build and deployment**, choose:
+   - **Source:** Deploy from a branch
+   - **Branch:** `main` (or your preferred branch), `/ (root)`
+4. Save and wait for Pages deployment.
+5. Open your published URL.
+
+No build or action is required for this MVP.
+
+## Where to plug in real APIs later
+
+- **River source:** replace `dashboardData.river` in `data/mockData.js` with fetched gauge data (or inject via a pre-generated JSON file). 
+- **Weather source:** replace `dashboardData.weather` with weather API output.
+- **Camera source:** replace `dashboardData.cameras` with actual media metadata feed.
+- **Interpretation thresholds:** edit `data/thresholds.js` for property-specific stage categories.
+- **AI summary:** replace `buildRulesSummary()` in `js/app.js` with LLM-generated summary text.
+
+## Suggested next steps
+
+- Add daily history files (JSON) for lightweight trend retention
+- Add camera/date filters in the existing gallery layout
+- Add small map panel for camera/gauge context
+- Add serverless function for consolidated data fetch + AI summary generation
+- Add notification routing when threshold severity crosses configured levels
